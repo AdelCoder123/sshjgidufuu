@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="text"], input[type="number"], input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>لوحة التحكم</h2>
+    <input type="text" id="username" placeholder="اسم المستخدم" />
+    <input type="number" id="amount" placeholder="أدخل المبلغ لإضافة الرصيد" />
+    <input type="button" value="إضافة رصيد" onclick="addBalance()" />
+</div>
+
+<script>
+    async function addBalance() {
+        const username = document.getElementById('username').value;
+        const amount = parseFloat(document.getElementById('amount').value);
+        
+        if (!username || isNaN(amount) || amount <= 0) {
+            alert('يرجى إدخال اسم المستخدم ومبلغ صحيح.');
+            return;
+        }
+
+        const response = await fetch(`http://localhost:3000/add-balance/${username}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ amount }),
+        });
+
+        if (response.ok) {
+            alert('تم إضافة الرصيد بنجاح!');
+            document.getElementById('username').value = ''; // مسح حقل اسم المستخدم
+            document.getElementById('amount').value = ''; // مسح حقل المبلغ
+        } else {
+            const error = await response.json();
+            alert(error.error);
+        }
+    }
+</script>
+
+</body>
+</html>
