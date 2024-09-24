@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 400px; margin: auto; text-align: center; }
+        .balance { font-size: 24px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>لوحة التحكم</h1>
+        <div class="balance">الرصيد: <span id="balance">0</span> دولار</div>
+    </div>
+
+    <script>
+        function updateBalance() {
+            fetch("http://localhost:3000/get-balance")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("balance").innerText = data.balance;
+                });
+        }
+
+        // تحديث الرصيد عند تحميل الصفحة
+        window.onload = updateBalance;
+
+        // تحديث الرصيد كل 5 ثوانٍ
+        setInterval(updateBalance, 5000);
+    </script>
+</body>
+</html>
